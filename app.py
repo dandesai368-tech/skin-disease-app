@@ -48,12 +48,6 @@ st.markdown("""
     animation: fadeIn 0.8s ease-in-out;
 }
 
-/* Inputs */
-.stTextInput input {
-    border-radius: 10px;
-    padding: 10px;
-}
-
 /* Buttons */
 .stButton>button {
     background: linear-gradient(to right, #6366f1, #8b5cf6);
@@ -157,8 +151,7 @@ elif page == "Detection":
             hospital = "AIIMS"
             precaution = "Consult doctor immediately"
 
-        # ----------- BEAUTIFUL VISIBLE CARDS -----------
-
+        # Visible Cards
         st.markdown(f"""
         <div style="background:#d1fae5;padding:18px;border-radius:12px;
         margin-top:15px;font-size:20px;font-weight:700;color:#065f46;">
@@ -192,31 +185,42 @@ elif page == "Feedback":
 
     st.markdown("<div class='section-title'>💬 Patient Feedback</div>", unsafe_allow_html=True)
 
-    name = st.text_input("Name")
-    rating = st.slider("Rating",1,5)
-    fb = st.text_area("Feedback")
+    name = st.text_input("👤 Name")
+    age = st.number_input("🎂 Age", min_value=1, max_value=100, step=1)
+    gender = st.selectbox("⚧ Gender", ["Male", "Female", "Other"])
+    location = st.text_input("📍 Location")
 
-    if st.button("Submit"):
-        df = pd.DataFrame([[name,rating,fb]], columns=["Name","Rating","Feedback"])
+    disease = st.selectbox("🧠 Disease", ["Acne", "Eczema", "Psoriasis", "Melanoma"])
+
+    rating = st.slider("⭐ Rating", 1, 5)
+    fb = st.text_area("💬 Feedback")
+
+    if st.button("Submit Feedback"):
+
+        df = pd.DataFrame([[name, age, gender, location, disease, rating, fb]],
+                          columns=["Name", "Age", "Gender", "Location", "Disease", "Rating", "Feedback"])
+
         df.to_csv("feedback.csv", mode="a", header=False, index=False)
-        st.success("✅ Feedback Saved")
+
+        st.success("✅ Feedback Saved Successfully!")
 
 # ---------------- ANALYTICS ----------------
 elif page == "Analytics":
 
     st.markdown("<div class='section-title'>📊 Analytics</div>", unsafe_allow_html=True)
 
-    data = {
-        "Acne": random.randint(10,50),
-        "Eczema": random.randint(10,50),
-        "Psoriasis": random.randint(10,50),
-        "Melanoma": random.randint(5,30)
-    }
-
-    st.bar_chart(data)
-
     try:
         df = pd.read_csv("feedback.csv")
+
+        st.subheader("⭐ Ratings Distribution")
         st.bar_chart(df["Rating"].value_counts())
+
+        st.subheader("🧠 Disease Cases")
+        st.bar_chart(df["Disease"].value_counts())
+
+        st.subheader("⚧ Gender Distribution")
+        st.bar_chart(df["Gender"].value_counts())
+
     except:
-        st.info("No feedback yet")
+        st.info("No data available yet")
+  
