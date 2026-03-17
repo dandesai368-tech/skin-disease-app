@@ -19,24 +19,24 @@ st.markdown("""
 .main-title {
     text-align: center;
     font-size: 50px;
-    font-weight: 800;
+    font-weight: 900;
     color: #0f172a;
 }
 
-/* Login Heading */
-.login-title {
-    font-size: 38px;
-    font-weight: 800;
-    color: #111827;
-    text-align:center;
+/* Section Title */
+.section-title {
+    font-size: 36px;
+    font-weight: 900;
+    color: #1e3a8a;
+    margin-top: 20px;
 }
 
-/* Subtitle */
-.login-sub {
-    font-size: 18px;
-    color: #374151;
-    text-align:center;
-    margin-bottom: 20px;
+/* 🔥 STRONG LABEL FIX */
+.label {
+    font-size: 22px;
+    font-weight: 800;
+    color: #000000;   /* FULL DARK */
+    margin-top: 15px;
 }
 
 /* Card */
@@ -45,7 +45,21 @@ st.markdown("""
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
-    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Login Heading */
+.login-title {
+    font-size: 38px;
+    font-weight: 900;
+    color: #000000;
+    text-align:center;
+}
+
+/* Subtitle */
+.login-sub {
+    font-size: 18px;
+    color: #374151;
+    text-align:center;
 }
 
 /* Buttons */
@@ -56,18 +70,17 @@ st.markdown("""
     border-radius: 10px;
 }
 
-/* Section headings */
-.section-title {
-    font-size: 34px;
-    font-weight: 800;
-    color: #1e3a8a;
-    margin-top: 20px;
+/* Inputs DARK */
+.stTextInput input, .stNumberInput input {
+    background-color: #1f2937;
+    color: white;
+    border-radius: 10px;
 }
 
-/* Animation */
-@keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
+/* Dropdown */
+.stSelectbox div {
+    background-color: #1f2937 !important;
+    color: white !important;
 }
 
 </style>
@@ -100,25 +113,20 @@ if page == "Login":
     with col2:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
 
-        st.image("https://cdn-icons-png.flaticon.com/512/2966/2966488.png", width=70)
-
         st.markdown("<div class='login-title'>Welcome back 👋</div>", unsafe_allow_html=True)
         st.markdown("<div class='login-sub'>Please enter your details</div>", unsafe_allow_html=True)
 
-        username = st.text_input("", placeholder="Enter your username")
+        st.markdown("<div class='label'>👤 Username</div>", unsafe_allow_html=True)
+        username = st.text_input("")
 
-        show = st.checkbox("Show Password")
-        password = st.text_input("", type="default" if show else "password", placeholder="Enter password")
-
-        st.checkbox("Remember for 30 days")
+        st.markdown("<div class='label'>🔑 Password</div>", unsafe_allow_html=True)
+        password = st.text_input("", type="password")
 
         if st.button("Sign In"):
             if username == "admin" and password == "1234":
-                st.success("✅ Login Successful! Go to Detection")
+                st.success("✅ Login Successful!")
             else:
                 st.error("❌ Invalid Credentials")
-
-        st.markdown("<p style='text-align:right;color:#6366f1;'>Forgot password?</p>", unsafe_allow_html=True)
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -127,9 +135,11 @@ elif page == "Detection":
 
     st.markdown("<div class='section-title'>🧪 Skin Detection</div>", unsafe_allow_html=True)
 
-    location = st.text_input("📍 Location (lat, lon)", "17.3850, 78.4867")
+    st.markdown("<div class='label'>📍 Location</div>", unsafe_allow_html=True)
+    location = st.text_input("", "17.3850, 78.4867")
 
-    file = st.file_uploader("Upload Image", type=["jpg","png","jpeg"])
+    st.markdown("<div class='label'>📷 Upload Image</div>", unsafe_allow_html=True)
+    file = st.file_uploader("")
 
     if file:
         img = Image.open(file)
@@ -151,57 +161,57 @@ elif page == "Detection":
             hospital = "AIIMS"
             precaution = "Consult doctor immediately"
 
-        # Visible Cards
         st.markdown(f"""
         <div style="background:#d1fae5;padding:18px;border-radius:12px;
-        margin-top:15px;font-size:20px;font-weight:700;color:#065f46;">
+        margin-top:15px;font-size:20px;font-weight:800;color:#065f46;">
         🧠 Disease: {pred}
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div style="background:#dbeafe;padding:18px;border-radius:12px;
-        margin-top:10px;font-size:20px;font-weight:700;color:#1e3a8a;">
+        margin-top:10px;font-size:20px;font-weight:800;color:#1e3a8a;">
         🏥 Hospital: {hospital}
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div style="background:#fef3c7;padding:18px;border-radius:12px;
-        margin-top:10px;font-size:20px;font-weight:700;color:#92400e;">
+        margin-top:10px;font-size:20px;font-weight:800;color:#92400e;">
         ⚠️ Precaution: {precaution}
         </div>
         """, unsafe_allow_html=True)
-
-        try:
-            lat, lon = map(float, location.split(","))
-            df = pd.DataFrame({"lat":[lat],"lon":[lon]})
-            st.map(df)
-        except:
-            st.error("Enter correct format like 17.3850, 78.4867")
 
 # ---------------- FEEDBACK ----------------
 elif page == "Feedback":
 
     st.markdown("<div class='section-title'>💬 Patient Feedback</div>", unsafe_allow_html=True)
 
-    name = st.text_input("👤 Name")
-    age = st.number_input("🎂 Age", min_value=1, max_value=100, step=1)
-    gender = st.selectbox("⚧ Gender", ["Male", "Female", "Other"])
-    location = st.text_input("📍 Location")
+    st.markdown("<div class='label'>👤 Name</div>", unsafe_allow_html=True)
+    name = st.text_input("")
 
-    disease = st.selectbox("🧠 Disease", ["Acne", "Eczema", "Psoriasis", "Melanoma"])
+    st.markdown("<div class='label'>🎂 Age</div>", unsafe_allow_html=True)
+    age = st.number_input("", min_value=1, max_value=100)
 
-    rating = st.slider("⭐ Rating", 1, 5)
-    fb = st.text_area("💬 Feedback")
+    st.markdown("<div class='label'>⚧ Gender</div>", unsafe_allow_html=True)
+    gender = st.selectbox("", ["Male", "Female", "Other"])
+
+    st.markdown("<div class='label'>📍 Location</div>", unsafe_allow_html=True)
+    location = st.text_input(" ")
+
+    st.markdown("<div class='label'>🧠 Disease</div>", unsafe_allow_html=True)
+    disease = st.selectbox(" ", ["Acne", "Eczema", "Psoriasis", "Melanoma"])
+
+    st.markdown("<div class='label'>⭐ Rating</div>", unsafe_allow_html=True)
+    rating = st.slider("", 1, 5)
+
+    st.markdown("<div class='label'>💬 Feedback</div>", unsafe_allow_html=True)
+    fb = st.text_area("")
 
     if st.button("Submit Feedback"):
-
         df = pd.DataFrame([[name, age, gender, location, disease, rating, fb]],
-                          columns=["Name", "Age", "Gender", "Location", "Disease", "Rating", "Feedback"])
-
+                          columns=["Name","Age","Gender","Location","Disease","Rating","Feedback"])
         df.to_csv("feedback.csv", mode="a", header=False, index=False)
-
         st.success("✅ Feedback Saved Successfully!")
 
 # ---------------- ANALYTICS ----------------
@@ -209,18 +219,17 @@ elif page == "Analytics":
 
     st.markdown("<div class='section-title'>📊 Analytics</div>", unsafe_allow_html=True)
 
+    data = {
+        "Acne": random.randint(10,50),
+        "Eczema": random.randint(10,50),
+        "Psoriasis": random.randint(10,50),
+        "Melanoma": random.randint(5,30)
+    }
+
+    st.bar_chart(data)
+
     try:
         df = pd.read_csv("feedback.csv")
-
-        st.subheader("⭐ Ratings Distribution")
         st.bar_chart(df["Rating"].value_counts())
-
-        st.subheader("🧠 Disease Cases")
-        st.bar_chart(df["Disease"].value_counts())
-
-        st.subheader("⚧ Gender Distribution")
-        st.bar_chart(df["Gender"].value_counts())
-
     except:
-        st.info("No data available yet")
-  
+        st.info("No feedback yet")
