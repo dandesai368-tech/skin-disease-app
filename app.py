@@ -6,63 +6,75 @@ import pandas as pd
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="Skin Disease Detection", layout="wide")
 
-# ---------------- CUSTOM CSS ----------------
+# ---------------- PREMIUM CSS ----------------
 st.markdown("""
 <style>
 
-/* Background */
+/* Background with image */
 .stApp {
-    background: linear-gradient(to right, #e3f2fd, #ffffff);
+    background: url("https://images.unsplash.com/photo-1588776814546-1ffcf47267a5") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Glass effect card */
+.glass {
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.85);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {opacity:0; transform:translateY(20px);}
+    to {opacity:1; transform:translateY(0);}
 }
 
 /* Headings */
 h1 {
-    color: #0b3c5d !important;
-    font-size: 48px !important;
-    text-align: center;
+    text-align:center;
+    color:white !important;
+    font-size:50px !important;
+    font-weight:bold;
 }
+
 h2 {
-    color: #1565c0 !important;
-    font-size: 32px !important;
-}
-h3 {
-    color: #1976d2 !important;
-    font-size: 24px !important;
+    color:#4a148c !important;
+    font-size:30px !important;
 }
 
-/* Text */
-label, p {
-    font-size: 18px !important;
-    color: black !important;
-}
-
-/* Card */
-.card {
-    padding: 35px;
-    border-radius: 20px;
-    background: white;
-    box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
+/* Labels */
+label {
+    color:black !important;
+    font-size:16px !important;
 }
 
 /* Buttons */
 .stButton>button {
-    background-color: #1976d2;
-    color: white;
-    font-size: 18px;
-    border-radius: 10px;
-    padding: 10px 20px;
+    background: linear-gradient(to right, #7b1fa2, #512da8);
+    color:white;
+    border-radius:10px;
+    font-size:18px;
+    padding:10px;
+    width:100%;
 }
 
 /* Navigation buttons */
-.nav-btn {
-    text-align:center;
-    margin-bottom:20px;
+.nav button {
+    background-color:#ffffff;
+    color:black;
+    border-radius:8px;
+    padding:8px;
+    font-weight:600;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- NAVIGATION (TOP MENU) ----------------
-st.markdown("<h1>🩺 Skin Disease Detection System</h1>", unsafe_allow_html=True)
+# ---------------- NAVIGATION ----------------
+st.markdown("<h1>🩺 Skin Disease Detection</h1>", unsafe_allow_html=True)
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -80,30 +92,30 @@ if col4.button("📊 Analytics"):
 
 page = st.session_state.page
 
-# ---------------- LOGIN ----------------
+# ---------------- LOGIN PAGE ----------------
 if page == "Login":
 
     col1, col2, col3 = st.columns([1,2,1])
 
     with col2:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        st.markdown("<div class='glass'>", unsafe_allow_html=True)
 
-        st.markdown("<h2>👋 Welcome Back</h2>", unsafe_allow_html=True)
+        st.markdown("<h2>Welcome back</h2>", unsafe_allow_html=True)
 
-        username = st.text_input("👤 Username")
+        email = st.text_input("📧 Enter your email")
 
         show_pass = st.checkbox("Show Password")
         password = st.text_input("🔑 Password", type="default" if show_pass else "password")
 
-        st.checkbox("Remember me")
+        st.checkbox("Remember for 30 days")
 
-        if st.button("🚀 Login"):
-            if username == "admin" and password == "1234":
-                st.success("✅ Login Successful! Go to Detection page")
+        if st.button("Sign In"):
+            if email == "admin@gmail.com" and password == "1234":
+                st.success("✅ Login Successful!")
             else:
-                st.error("❌ Invalid Username or Password")
+                st.error("❌ Invalid credentials")
 
-        st.markdown("<p style='text-align:right;color:#1565c0;'>Forgot Password?</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:right;color:#7b1fa2;'>Forgot password?</p>", unsafe_allow_html=True)
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -114,27 +126,26 @@ elif page == "Detection":
 
     location = st.text_input("📍 Enter Location (lat, lon)", "17.3850, 78.4867")
 
-    uploaded_file = st.file_uploader("📤 Upload Skin Image", type=["jpg","png","jpeg"])
+    uploaded_file = st.file_uploader("📤 Upload Image", type=["jpg","png","jpeg"])
 
     if uploaded_file:
         image = Image.open(uploaded_file)
-
         st.image(image, width=250)
 
         diseases = ["Acne", "Eczema", "Psoriasis", "Melanoma"]
         prediction = random.choice(diseases)
 
-        st.success(f"🧠 Detected Disease: {prediction}")
+        st.success(f"🧠 Detected: {prediction}")
 
         if prediction == "Acne":
             hospital = "City Skin Care Clinic"
-            precaution = "Wash face and avoid oily creams."
+            precaution = "Avoid oily skin products."
         elif prediction == "Eczema":
             hospital = "Apollo Dermatology Center"
-            precaution = "Use moisturizer regularly."
+            precaution = "Use moisturizer."
         elif prediction == "Psoriasis":
             hospital = "Fortis Skin Hospital"
-            precaution = "Reduce stress and follow treatment."
+            precaution = "Reduce stress."
         else:
             hospital = "AIIMS Dermatology Department"
             precaution = "Consult doctor immediately."
@@ -142,13 +153,12 @@ elif page == "Detection":
         st.info(f"🏥 Hospital: {hospital}")
         st.warning(f"⚠️ Precautions: {precaution}")
 
-        # Map
         try:
             lat, lon = map(float, location.split(","))
             map_data = pd.DataFrame({"lat":[lat], "lon":[lon]})
             st.map(map_data)
         except:
-            st.error("Enter correct format: 17.3850, 78.4867")
+            st.error("Enter correct format")
 
 # ---------------- FEEDBACK ----------------
 elif page == "Feedback":
@@ -159,22 +169,17 @@ elif page == "Feedback":
     rating = st.slider("⭐ Rating", 1, 5)
     feedback = st.text_area("📝 Feedback")
 
-    if st.button("Submit Feedback"):
+    if st.button("Submit"):
         df = pd.DataFrame([[name, rating, feedback]],
                           columns=["Name","Rating","Feedback"])
         df.to_csv("feedback.csv", mode="a", header=False, index=False)
 
-        st.success("✅ Feedback Saved!")
-
-        st.write(
-            "I visited the hospital and received excellent care. "
-            "Doctors were professional and treatment was effective."
-        )
+        st.success("✅ Feedback saved!")
 
 # ---------------- ANALYTICS ----------------
 elif page == "Analytics":
 
-    st.markdown("<h2>📊 Analytics Dashboard</h2>", unsafe_allow_html=True)
+    st.markdown("<h2>📊 Analytics</h2>", unsafe_allow_html=True)
 
     data = {
         "Acne": random.randint(10,50),
@@ -183,12 +188,10 @@ elif page == "Analytics":
         "Melanoma": random.randint(5,30)
     }
 
-    st.subheader("🧠 Disease Cases")
     st.bar_chart(data)
 
     try:
         df = pd.read_csv("feedback.csv")
-        st.subheader("⭐ Ratings")
         st.bar_chart(df["Rating"].value_counts())
     except:
-        st.info("No feedback yet.")
+        st.info("No data yet.")
