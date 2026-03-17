@@ -1,14 +1,23 @@
 import streamlit as st
 from PIL import Image
 
-st.set_page_config(page_title="Skin Disease App", layout="centered")
+# Page settings
+st.set_page_config(page_title="Skin Disease App", layout="wide")
+
+# White background
+st.markdown("""
+<style>
+body {
+    background-color: white;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # Sidebar navigation
-menu = ["Login", "Detection", "Feedback"]
-choice = st.sidebar.selectbox("Menu", menu)
+page = st.sidebar.selectbox("Menu", ["Login", "Skin Detection", "Feedback"])
 
-# ---------------- LOGIN ----------------
-if choice == "Login":
+# ---------------- LOGIN PAGE ----------------
+if page == "Login":
     st.title("🔐 Login Page")
 
     username = st.text_input("Username")
@@ -18,38 +27,35 @@ if choice == "Login":
         if username == "admin" and password == "1234":
             st.success("Login Successful ✅")
         else:
-            st.error("Invalid Credentials ❌")
+            st.error("Invalid Username or Password ❌")
 
-# ---------------- DETECTION ----------------
-elif choice == "Detection":
-    st.title("🩺 Skin Disease Detection")
+# ---------------- SKIN DETECTION ----------------
+elif page == "Skin Detection":
+    st.title("🧴 Skin Disease Detection")
 
-    def predict_disease():
-        return "Acne"
-
-    uploaded_file = st.file_uploader("Upload Skin Image", type=["jpg","png","jpeg"])
+    uploaded_file = st.file_uploader("Upload Skin Image", type=["jpg", "png", "jpeg"])
 
     if uploaded_file:
         image = Image.open(uploaded_file)
-        st.image(image)
+        st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        disease = predict_disease()
+        # Fake prediction
+        disease = "Acne"
+
         st.success("Detected Disease: " + disease)
 
-        st.subheader("Recommended Hospitals")
+        st.subheader("🏥 Recommended Hospitals")
         st.write("• Apollo Hospital")
         st.write("• AIIMS")
         st.write("• Fortis Hospital")
 
 # ---------------- FEEDBACK ----------------
-elif choice == "Feedback":
-    st.title("📝 Feedback Form")
+elif page == "Feedback":
+    st.title("💬 Feedback Form")
 
-    name = st.text_input("Name")
-    feedback = st.text_area("Feedback")
+    name = st.text_input("Your Name")
+    rating = st.slider("Rate us", 1, 5)
+    feedback = st.text_area("Your Feedback")
 
     if st.button("Submit"):
-        if name and feedback:
-            st.success("Feedback Submitted ✅")
-        else:
-            st.warning("Please fill all fields ⚠️")
+        st.success("Thank you for your feedback! ❤️")
