@@ -4,10 +4,11 @@ from PIL import Image
 # -------- PAGE SETTINGS --------
 st.set_page_config(page_title="Skin Disease App", layout="centered")
 
-# -------- LOGIN SYSTEM --------
+# -------- SESSION --------
 if "login" not in st.session_state:
     st.session_state.login = False
 
+# -------- LOGIN PAGE --------
 def login_page():
     st.title("🔐 Login Page")
 
@@ -18,6 +19,7 @@ def login_page():
         if user == "admin" and pwd == "1234":
             st.session_state.login = True
             st.success("Login Successful ✅")
+            st.rerun()   # 🔥 THIS FIXES YOUR PROBLEM
         else:
             st.error("Wrong Username/Password ❌")
 
@@ -63,11 +65,8 @@ def app():
         if st.button("Submit"):
             st.success("Thank you for your feedback!")
 
-# -------- RUN APP --------
+# -------- RUN --------
 if st.session_state.login == False:
     login_page()
 else:
     app()
-
-          
-  
