@@ -6,47 +6,60 @@ import pandas as pd
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="Skin Disease Detection", layout="wide")
 
-# ---------------- PREMIUM CSS ----------------
+# ---------------- CSS ----------------
 st.markdown("""
 <style>
 
-/* Background with soft gradient */
+/* Background */
 .stApp {
-    background: linear-gradient(135deg, #dbeafe, #f0f9ff);
+    background: linear-gradient(135deg, #dbeafe, #f8fafc);
 }
 
-/* Center title */
+/* Main Title */
 .main-title {
     text-align: center;
-    font-size: 48px;
-    font-weight: bold;
-    color: #1e3a8a;
+    font-size: 50px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* Login Heading */
+.login-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #111827;
+    text-align:center;
+}
+
+/* Subtitle */
+.login-sub {
+    font-size: 18px;
+    color: #374151;
+    text-align:center;
     margin-bottom: 20px;
 }
 
-/* Card UI */
+/* Card */
 .card {
     background: white;
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
-    text-align: center;
-    animation: fadeIn 1s ease-in-out;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
-/* Input fields */
-.stTextInput>div>div>input {
+/* Inputs */
+.stTextInput input {
     border-radius: 10px;
     padding: 10px;
 }
 
-/* Button */
+/* Buttons */
 .stButton>button {
     background: linear-gradient(to right, #6366f1, #8b5cf6);
     color: white;
-    border-radius: 10px;
-    padding: 10px 20px;
     font-size: 18px;
+    border-radius: 10px;
 }
 
 /* Animation */
@@ -55,20 +68,19 @@ st.markdown("""
     to {opacity: 1; transform: translateY(0);}
 }
 
-/* Headings */
-h2 {
+/* Section headings */
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
     color: #1e3a8a;
-    font-size: 30px;
-}
-h3 {
-    color: #2563eb;
+    margin-top: 20px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- TOP NAV ----------------
-st.markdown("<div class='main-title'>🩺 Skin Disease Detection</div>", unsafe_allow_html=True)
+# ---------------- NAVIGATION ----------------
+st.markdown("<div class='main-title'>🩺 Skin Disease Detection System</div>", unsafe_allow_html=True)
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -86,7 +98,7 @@ if col4.button("📊 Analytics"):
 
 page = st.session_state.page
 
-# ---------------- LOGIN PAGE ----------------
+# ---------------- LOGIN ----------------
 if page == "Login":
 
     col1, col2, col3 = st.columns([1,2,1])
@@ -96,8 +108,8 @@ if page == "Login":
 
         st.image("https://cdn-icons-png.flaticon.com/512/2966/2966488.png", width=70)
 
-        st.markdown("<h2>Welcome back</h2>", unsafe_allow_html=True)
-        st.write("Please enter your details")
+        st.markdown("<div class='login-title'>Welcome back 👋</div>", unsafe_allow_html=True)
+        st.markdown("<div class='login-sub'>Please enter your details</div>", unsafe_allow_html=True)
 
         username = st.text_input("", placeholder="Enter your username")
 
@@ -112,14 +124,14 @@ if page == "Login":
             else:
                 st.error("❌ Invalid Credentials")
 
-        st.markdown("<p style='color:#6366f1;'>Forgot password?</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:right;color:#6366f1;'>Forgot password?</p>", unsafe_allow_html=True)
 
         st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------- DETECTION ----------------
 elif page == "Detection":
 
-    st.markdown("<h2>🧪 Skin Detection</h2>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>🧪 Skin Detection</div>", unsafe_allow_html=True)
 
     location = st.text_input("📍 Location (lat, lon)", "17.3850, 78.4867")
 
@@ -155,12 +167,12 @@ elif page == "Detection":
             df = pd.DataFrame({"lat":[lat],"lon":[lon]})
             st.map(df)
         except:
-            st.error("Enter correct location format")
+            st.error("Enter correct format like 17.3850, 78.4867")
 
 # ---------------- FEEDBACK ----------------
 elif page == "Feedback":
 
-    st.markdown("<h2>💬 Patient Feedback</h2>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>💬 Patient Feedback</div>", unsafe_allow_html=True)
 
     name = st.text_input("Name")
     rating = st.slider("Rating",1,5)
@@ -175,7 +187,7 @@ elif page == "Feedback":
 # ---------------- ANALYTICS ----------------
 elif page == "Analytics":
 
-    st.markdown("<h2>📊 Analytics</h2>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>📊 Analytics</div>", unsafe_allow_html=True)
 
     data = {
         "Acne": random.randint(10,50),
