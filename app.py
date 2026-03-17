@@ -2,27 +2,40 @@ import streamlit as st
 from PIL import Image
 import random
 
-# Page config
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="Skin Disease Detection", layout="wide")
 
-# White Background Style
+# ---------------- CUSTOM CSS ----------------
 st.markdown("""
-    <style>
-    body {
-        background-color: #ffffff;
-    }
-    .stApp {
-        background-color: #ffffff;
-    }
-    </style>
+<style>
+body {
+    background-color: #f5f7fa;
+}
+.stApp {
+    background-color: #f5f7fa;
+}
+h1, h2, h3, h4 {
+    color: #1f4e79 !important;
+}
+label, .stTextInput label {
+    color: black !important;
+    font-weight: 600;
+}
+.card {
+    padding: 25px;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+}
+</style>
 """, unsafe_allow_html=True)
 
-# Sidebar Navigation
-st.sidebar.title("Navigation")
-menu = ["Login", "Skin Detection", "Feedback"]
+# ---------------- SIDEBAR ----------------
+st.sidebar.title("🔍 Navigation")
+menu = ["Login", "Skin Detection", "Feedback", "Analytics"]
 choice = st.sidebar.selectbox("Go to", menu)
 
-# ------------------ LOGIN PAGE ------------------
+# ---------------- LOGIN PAGE ----------------
 if choice == "Login":
 
     st.markdown("<h1 style='text-align:center;'>🔐 Skin Disease Detection System</h1>", unsafe_allow_html=True)
@@ -30,10 +43,7 @@ if choice == "Login":
     col1, col2, col3 = st.columns([1,2,1])
 
     with col2:
-        st.markdown("""
-        <div style='padding:30px; border-radius:15px;
-        background:white; box-shadow:0px 5px 20px rgba(0,0,0,0.1);'>
-        """, unsafe_allow_html=True)
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
 
         st.subheader("👋 Welcome Back")
 
@@ -47,28 +57,29 @@ if choice == "Login":
 
         st.checkbox("Remember me")
 
-        if st.button("Login"):
+        if st.button("🚀 Login"):
             if username == "admin" and password == "1234":
                 st.success("✅ Login Successful!")
             else:
                 st.error("❌ Invalid Username or Password")
 
-        st.markdown("<p style='text-align:right; color:gray;'>Forgot Password?</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:right; color:#1f4e79;'>Forgot Password?</p>", unsafe_allow_html=True)
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-# ------------------ SKIN DETECTION ------------------
+# ---------------- SKIN DETECTION ----------------
 elif choice == "Skin Detection":
 
     st.title("🩺 Skin Disease Detection")
 
-    uploaded_file = st.file_uploader("Upload Skin Image", type=["jpg", "png", "jpeg"])
+    location = st.text_input("📍 Enter Your Location")
+
+    uploaded_file = st.file_uploader("📤 Upload Skin Image", type=["jpg", "png", "jpeg"])
 
     if uploaded_file:
         image = Image.open(uploaded_file)
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        # Dummy Prediction (replace with model later)
         diseases = ["Acne", "Eczema", "Psoriasis", "Melanoma"]
         prediction = random.choice(diseases)
 
@@ -77,30 +88,52 @@ elif choice == "Skin Detection":
         # Hospital Recommendation
         if prediction == "Acne":
             hospital = "City Skin Care Clinic"
+            precaution = "Keep skin clean and avoid oily products."
         elif prediction == "Eczema":
             hospital = "Apollo Dermatology Center"
+            precaution = "Use moisturizers and avoid allergens."
         elif prediction == "Psoriasis":
             hospital = "Fortis Skin Hospital"
+            precaution = "Reduce stress and follow medical advice."
         else:
             hospital = "AIIMS Dermatology Department"
+            precaution = "Consult doctor immediately."
 
         st.info(f"🏥 Recommended Hospital: {hospital}")
+        st.warning(f"⚠️ Precautions: {precaution}")
 
-# ------------------ FEEDBACK ------------------
+# ---------------- FEEDBACK ----------------
 elif choice == "Feedback":
 
-    st.title("💬 Patient Feedback Form")
+    st.title("💬 Patient Feedback")
 
-    name = st.text_input("👤 Your Name")
-    rating = st.slider("⭐ Rate your experience", 1, 5)
-    feedback = st.text_area("📝 Your Feedback")
+    name = st.text_input("👤 Name")
+    rating = st.slider("⭐ Rating", 1, 5)
+    feedback = st.text_area("📝 Feedback")
 
-    if st.button("Submit Feedback"):
+    if st.button("Submit"):
         st.success("✅ Thank you for your feedback!")
 
-        st.write("📄 Sample Feedback:")
+        st.markdown("### 📄 Sample Patient Feedback")
         st.write(
-            "I visited the hospital after using this system, and the experience was very good. "
-            "The doctors were professional, and the treatment was effective. "
-            "I am satisfied with the service provided."
+            "After visiting the recommended hospital, I had a very positive experience. "
+            "The doctors were knowledgeable and provided effective treatment. "
+            "The hospital environment was clean and well-maintained."
         )
+
+# ---------------- ANALYTICS ----------------
+elif choice == "Analytics":
+
+    st.title("📊 Analytics Dashboard")
+
+    data = {
+        "Acne": random.randint(10, 50),
+        "Eczema": random.randint(10, 50),
+        "Psoriasis": random.randint(10, 50),
+        "Melanoma": random.randint(5, 30)
+    }
+
+    st.bar_chart(data)
+
+    st.info("📈 This chart shows number of detected cases.")
+    
