@@ -1,72 +1,55 @@
 import streamlit as st
 from PIL import Image
 
-# -------- PAGE SETTINGS --------
 st.set_page_config(page_title="Skin Disease App", layout="centered")
 
-# -------- SESSION --------
-if "login" not in st.session_state:
-    st.session_state.login = False
+# Sidebar navigation
+menu = ["Login", "Detection", "Feedback"]
+choice = st.sidebar.selectbox("Menu", menu)
 
-# -------- LOGIN PAGE --------
-def login_page():
+# ---------------- LOGIN ----------------
+if choice == "Login":
     st.title("🔐 Login Page")
 
-    user = st.text_input("Username")
-    pwd = st.text_input("Password", type="password")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
 
     if st.button("Login"):
-        if user == "admin" and pwd == "1234":
-            st.session_state.login = True
+        if username == "admin" and password == "1234":
             st.success("Login Successful ✅")
-            st.rerun()   # 🔥 THIS FIXES YOUR PROBLEM
         else:
-            st.error("Wrong Username/Password ❌")
+            st.error("Invalid Credentials ❌")
 
-# -------- MAIN APP --------
-def app():
-    st.sidebar.title("Menu")
-    choice = st.sidebar.radio("Select", ["Skin Detection", "Feedback"])
+# ---------------- DETECTION ----------------
+elif choice == "Detection":
+    st.title("🩺 Skin Disease Detection")
 
-    # -------- SKIN DETECTION --------
-    if choice == "Skin Detection":
-        st.title("🧴 Skin Disease Detection")
+    def predict_disease():
+        return "Acne"
 
-        file = st.file_uploader("Upload Skin Image", type=["jpg","png","jpeg"])
+    uploaded_file = st.file_uploader("Upload Skin Image", type=["jpg","png","jpeg"])
 
-        if file:
-            img = Image.open(file)
-            st.image(img, caption="Uploaded Image", use_column_width=True)
+    if uploaded_file:
+        image = Image.open(uploaded_file)
+        st.image(image)
 
-            # Dummy prediction
-            disease = "Acne"
+        disease = predict_disease()
+        st.success("Detected Disease: " + disease)
 
-            st.success("Detected Disease: " + disease)
+        st.subheader("Recommended Hospitals")
+        st.write("• Apollo Hospital")
+        st.write("• AIIMS")
+        st.write("• Fortis Hospital")
 
-            # -------- TIPS --------
-            st.subheader("💡 Skin Care Tips")
-            st.write("• Wash face twice daily")
-            st.write("• Drink more water")
-            st.write("• Avoid oily food")
+# ---------------- FEEDBACK ----------------
+elif choice == "Feedback":
+    st.title("📝 Feedback Form")
 
-            # -------- PRECAUTIONS --------
-            st.subheader("⚠️ Precautions")
-            st.write("• Do not touch affected area")
-            st.write("• Avoid sunlight")
-            st.write("• Keep skin clean")
+    name = st.text_input("Name")
+    feedback = st.text_area("Feedback")
 
-    # -------- FEEDBACK --------
-    if choice == "Feedback":
-        st.title("💬 Feedback Form")
-
-        name = st.text_input("Enter your name")
-        msg = st.text_area("Your feedback")
-
-        if st.button("Submit"):
-            st.success("Thank you for your feedback!")
-
-# -------- RUN --------
-if st.session_state.login == False:
-    login_page()
-else:
-    app()
+    if st.button("Submit"):
+        if name and feedback:
+            st.success("Feedback Submitted ✅")
+        else:
+            st.warning("Please fill all fields ⚠️")
