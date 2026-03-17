@@ -25,8 +25,8 @@ st.markdown("""
 
 /* Login Heading */
 .login-title {
-    font-size: 36px;
-    font-weight: 700;
+    font-size: 38px;
+    font-weight: 800;
     color: #111827;
     text-align:center;
 }
@@ -62,18 +62,18 @@ st.markdown("""
     border-radius: 10px;
 }
 
+/* Section headings */
+.section-title {
+    font-size: 34px;
+    font-weight: 800;
+    color: #1e3a8a;
+    margin-top: 20px;
+}
+
 /* Animation */
 @keyframes fadeIn {
     from {opacity: 0; transform: translateY(20px);}
     to {opacity: 1; transform: translateY(0);}
-}
-
-/* Section headings */
-.section-title {
-    font-size: 32px;
-    font-weight: 700;
-    color: #1e3a8a;
-    margin-top: 20px;
 }
 
 </style>
@@ -144,8 +144,6 @@ elif page == "Detection":
         diseases = ["Acne", "Eczema", "Psoriasis", "Melanoma"]
         pred = random.choice(diseases)
 
-        st.success(f"🧠 Disease: {pred}")
-
         if pred == "Acne":
             hospital = "City Skin Clinic"
             precaution = "Avoid oily food"
@@ -159,8 +157,28 @@ elif page == "Detection":
             hospital = "AIIMS"
             precaution = "Consult doctor immediately"
 
-        st.info(f"🏥 Hospital: {hospital}")
-        st.warning(f"⚠️ Precaution: {precaution}")
+        # ----------- BEAUTIFUL VISIBLE CARDS -----------
+
+        st.markdown(f"""
+        <div style="background:#d1fae5;padding:18px;border-radius:12px;
+        margin-top:15px;font-size:20px;font-weight:700;color:#065f46;">
+        🧠 Disease: {pred}
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div style="background:#dbeafe;padding:18px;border-radius:12px;
+        margin-top:10px;font-size:20px;font-weight:700;color:#1e3a8a;">
+        🏥 Hospital: {hospital}
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div style="background:#fef3c7;padding:18px;border-radius:12px;
+        margin-top:10px;font-size:20px;font-weight:700;color:#92400e;">
+        ⚠️ Precaution: {precaution}
+        </div>
+        """, unsafe_allow_html=True)
 
         try:
             lat, lon = map(float, location.split(","))
@@ -181,7 +199,6 @@ elif page == "Feedback":
     if st.button("Submit"):
         df = pd.DataFrame([[name,rating,fb]], columns=["Name","Rating","Feedback"])
         df.to_csv("feedback.csv", mode="a", header=False, index=False)
-
         st.success("✅ Feedback Saved")
 
 # ---------------- ANALYTICS ----------------
