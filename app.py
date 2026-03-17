@@ -1,17 +1,7 @@
 import streamlit as st
 from PIL import Image
 
-# Page config
 st.set_page_config(page_title="Skin Disease App", layout="centered")
-
-# White background
-st.markdown("""
-    <style>
-    .stApp {
-        background-color: white;
-    }
-    </style>
-""", unsafe_allow_html=True)
 
 # Sidebar navigation
 menu = ["Login", "Detection", "Feedback"]
@@ -26,9 +16,9 @@ if choice == "Login":
 
     if st.button("Login"):
         if username == "admin" and password == "1234":
-            st.success("Login Successful ✅")
+            st.success("Login successful ✅")
         else:
-            st.error("Invalid Username or Password ❌")
+            st.error("Invalid credentials ❌")
 
 # ---------------- DETECTION ----------------
 elif choice == "Detection":
@@ -58,11 +48,11 @@ elif choice == "Feedback":
     name = st.text_input("Your Name")
     feedback = st.text_area("Your Feedback")
 
-    # ⭐ Rating
-    rating = st.slider("Rate our system (1 = Bad, 5 = Excellent)", 1, 5, 3)
+    # ⭐ Rating system
+    rating = st.slider("Rate our service (1 = Bad, 5 = Excellent)", 1, 5)
 
     if st.button("Submit Feedback"):
         if name and feedback:
-            st.success(f"Thank you {name}! ⭐ Rating: {rating}")
+            st.success(f"Thanks {name}! ⭐ Rating: {rating}")
         else:
             st.warning("Please fill all fields")
