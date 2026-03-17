@@ -7,34 +7,55 @@ import matplotlib.pyplot as plt
 # -------- PAGE CONFIG --------
 st.set_page_config(page_title="Skin Disease App", layout="wide")
 
-# -------- FORCE WHITE UI --------
+# -------- CUSTOM CSS (WHITE + ATTRACTIVE UI) --------
 st.markdown("""
 <style>
 .stApp {
     background-color: #ffffff;
 }
-h1, h2, h3, h4, h5, h6, p, label {
-    color: #000000;
-}
+
+/* CENTER LOGIN BOX */
 .login-box {
     width: 400px;
-    margin: auto;
+    margin: 100px auto;
     padding: 30px;
     background: #f9f9f9;
     border-radius: 15px;
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
     text-align: center;
 }
+
+/* TEXT */
 .title {
     text-align: center;
     font-size: 32px;
     font-weight: bold;
     color: #2c3e50;
 }
+
+/* LABELS */
+label {
+    color: black !important;
+    font-weight: bold;
+}
+
+/* INPUT BOX */
+input {
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+}
+
+/* BUTTON */
 button {
     background-color: #4CAF50 !important;
     color: white !important;
     border-radius: 8px !important;
+}
+
+/* REMOVE DARK INPUT BG */
+div[data-baseweb="input"] {
+    background-color: white !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -82,7 +103,7 @@ elif choice == "Detection":
             st.write("• AIIMS")
             st.write("• Fortis Hospital")
 
-# -------- FEEDBACK PAGE --------
+# -------- PATIENT FEEDBACK --------
 elif choice == "Patient Feedback":
     st.title("📝 Patient Feedback Form")
 
@@ -116,7 +137,7 @@ elif choice == "Patient Feedback":
         else:
             st.warning("⚠️ Please fill all fields")
 
-# -------- ANALYTICS PAGE --------
+# -------- ANALYTICS --------
 elif choice == "Analytics":
     st.title("📊 Feedback Analytics")
 
@@ -142,5 +163,3 @@ elif choice == "Analytics":
 
     else:
         st.warning("No data available")
-
-           
