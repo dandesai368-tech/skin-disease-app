@@ -1,80 +1,73 @@
 import streamlit as st
 from PIL import Image
 
-# ---------- PAGE SETTINGS ----------
-st.set_page_config(page_title="Skin Disease Detector", layout="wide")
+# -------- PAGE SETTINGS --------
+st.set_page_config(page_title="Skin Disease App", layout="centered")
 
-# ---------- SIMPLE LOGIN ----------
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
+# -------- LOGIN SYSTEM --------
+if "login" not in st.session_state:
+    st.session_state.login = False
 
-def login():
+def login_page():
     st.title("🔐 Login Page")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+
+    user = st.text_input("Username")
+    pwd = st.text_input("Password", type="password")
 
     if st.button("Login"):
-        if username == "admin" and password == "1234":
-            st.session_state.logged_in = True
-            st.success("Login Successful!")
+        if user == "admin" and pwd == "1234":
+            st.session_state.login = True
+            st.success("Login Successful ✅")
         else:
-            st.error("Invalid Credentials")
+            st.error("Wrong Username/Password ❌")
 
-# ---------- MAIN APP ----------
-def main_app():
-    st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", ["Skin Detection", "Feedback"])
+# -------- MAIN APP --------
+def app():
+    st.sidebar.title("Menu")
+    choice = st.sidebar.radio("Select", ["Skin Detection", "Feedback"])
 
-    # ---------- SKIN DETECTION ----------
-    if page == "Skin Detection":
+    # -------- SKIN DETECTION --------
+    if choice == "Skin Detection":
         st.title("🧴 Skin Disease Detection")
 
-        uploaded_file = st.file_uploader("Upload Skin Image", type=["jpg", "png", "jpeg"])
+        file = st.file_uploader("Upload Skin Image", type=["jpg","png","jpeg"])
 
-        if uploaded_file:
-            image = Image.open(uploaded_file)
-            st.image(image, caption="Uploaded Image", use_column_width=True)
+        if file:
+            img = Image.open(file)
+            st.image(img, caption="Uploaded Image", use_column_width=True)
 
             # Dummy prediction
             disease = "Acne"
 
-            st.success(f"Detected Disease: {disease}")
-            st.info("Confidence: 92%")
+            st.success("Detected Disease: " + disease)
 
-            # ---------- TIPS ----------
-            st.subheader("🧴 Skin Care Tips")
-            if disease == "Acne":
-                st.write("• Wash your face twice daily")
-                st.write("• Avoid oily and junk food")
-                st.write("• Use mild face wash")
-                st.write("• Drink plenty of water")
+            # -------- TIPS --------
+            st.subheader("💡 Skin Care Tips")
+            st.write("• Wash face twice daily")
+            st.write("• Drink more water")
+            st.write("• Avoid oily food")
 
-            # ---------- PRECAUTIONS ----------
+            # -------- PRECAUTIONS --------
             st.subheader("⚠️ Precautions")
-            st.write("• Do not touch or scratch the skin")
-            st.write("• Avoid direct sunlight")
-            st.write("• Keep skin clean and dry")
-            st.write("• Consult a doctor if severe")
+            st.write("• Do not touch affected area")
+            st.write("• Avoid sunlight")
+            st.write("• Keep skin clean")
 
-            # ---------- HOSPITALS ----------
-            st.subheader("🏥 Recommended Hospitals")
-            st.write("• Apollo Hospital")
-            st.write("• AIIMS")
-            st.write("• Fortis Hospital")
-
-    # ---------- FEEDBACK ----------
-    elif page == "Feedback":
+    # -------- FEEDBACK --------
+    if choice == "Feedback":
         st.title("💬 Feedback Form")
 
-        name = st.text_input("Name")
-        feedback = st.text_area("Your Feedback")
+        name = st.text_input("Enter your name")
+        msg = st.text_area("Your feedback")
 
         if st.button("Submit"):
             st.success("Thank you for your feedback!")
 
-# ---------- RUN ----------
-if not st.session_state.logged_in:
-    login()
+# -------- RUN APP --------
+if st.session_state.login == False:
+    login_page()
 else:
-    main_app()
-            
+    app()
+
+          
+  
