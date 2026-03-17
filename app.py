@@ -1,7 +1,17 @@
 import streamlit as st
 from PIL import Image
 
+# Page config
 st.set_page_config(page_title="Skin Disease App", layout="centered")
+
+# White background
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: white;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # Sidebar navigation
 menu = ["Login", "Detection", "Feedback"]
@@ -18,7 +28,7 @@ if choice == "Login":
         if username == "admin" and password == "1234":
             st.success("Login Successful ✅")
         else:
-            st.error("Invalid Credentials ❌")
+            st.error("Invalid Username or Password ❌")
 
 # ---------------- DETECTION ----------------
 elif choice == "Detection":
@@ -27,11 +37,11 @@ elif choice == "Detection":
     def predict_disease():
         return "Acne"
 
-    uploaded_file = st.file_uploader("Upload Skin Image", type=["jpg","png","jpeg"])
+    file = st.file_uploader("Upload Skin Image", type=["jpg","png","jpeg"])
 
-    if uploaded_file:
-        image = Image.open(uploaded_file)
-        st.image(image)
+    if file:
+        img = Image.open(file)
+        st.image(img, caption="Uploaded Image")
 
         disease = predict_disease()
         st.success("Detected Disease: " + disease)
@@ -45,11 +55,14 @@ elif choice == "Detection":
 elif choice == "Feedback":
     st.title("📝 Feedback Form")
 
-    name = st.text_input("Name")
-    feedback = st.text_area("Feedback")
+    name = st.text_input("Your Name")
+    feedback = st.text_area("Your Feedback")
 
-    if st.button("Submit"):
+    # ⭐ Rating
+    rating = st.slider("Rate our system (1 = Bad, 5 = Excellent)", 1, 5, 3)
+
+    if st.button("Submit Feedback"):
         if name and feedback:
-            st.success("Feedback Submitted ✅")
+            st.success(f"Thank you {name}! ⭐ Rating: {rating}")
         else:
-            st.warning("Please fill all fields ⚠️")
+            st.warning("Please fill all fields")
