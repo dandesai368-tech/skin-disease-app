@@ -2,20 +2,32 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 import os
-import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Skin Disease App", layout="wide")
 
-# Sidebar Menu
+# ---------------- CUSTOM STYLE ----------------
+st.markdown("""
+<style>
+.big-title {
+    font-size:30px;
+    font-weight:bold;
+    color:#4CAF50;
+}
+</style>
+""", unsafe_allow_html=True)
+
 menu = ["Login", "Detection", "Patient Feedback", "Analytics"]
 choice = st.sidebar.selectbox("Navigation", menu)
 
 # ---------------- LOGIN ----------------
 if choice == "Login":
-    st.title("🔐 Login Page")
+    st.markdown('<p class="big-title">🔐 Login Page</p>', unsafe_allow_html=True)
 
-    user = st.text_input("Username")
-    pwd = st.text_input("Password", type="password")
+    col1, col2 = st.columns(2)
+    with col1:
+        user = st.text_input("Username")
+    with col2:
+        pwd = st.text_input("Password", type="password")
 
     if st.button("Login"):
         if user == "admin" and pwd == "1234":
@@ -25,7 +37,7 @@ if choice == "Login":
 
 # ---------------- DETECTION ----------------
 elif choice == "Detection":
-    st.title("🩺 Skin Disease Detection")
+    st.markdown('<p class="big-title">🩺 Skin Disease Detection</p>', unsafe_allow_html=True)
 
     def predict():
         return "Acne"
@@ -49,7 +61,7 @@ elif choice == "Detection":
 
 # ---------------- PATIENT FEEDBACK ----------------
 elif choice == "Patient Feedback":
-    st.title("📝 Patient Feedback Form")
+    st.markdown('<p class="big-title">📝 Patient Feedback Form</p>', unsafe_allow_html=True)
 
     name = st.text_input("Patient Name")
     age = st.number_input("Age", 1, 100)
@@ -84,59 +96,19 @@ elif choice == "Patient Feedback":
 
 # ---------------- ANALYTICS ----------------
 elif choice == "Analytics":
-    st.title("📊 Feedback Analytics")
+    st.markdown('<p class="big-title">📊 Feedback Analytics</p>', unsafe_allow_html=True)
 
     if os.path.exists("feedback.csv"):
         df = pd.read_csv("feedback.csv")
 
-        st.subheader("📋 All Feedback Data")
+        st.subheader("All Feedback Data")
         st.dataframe(df)
 
-        # 🔍 Search
-        st.subheader("🔍 Search Patient")
-        search_name = st.text_input("Enter patient name")
-
-        if search_name:
-            result = df[df["Name"].str.contains(search_name, case=False)]
-            if not result.empty:
-                st.dataframe(result)
-            else:
-                st.warning("No patient found")
-
-        # 📊 Bar Charts
         st.subheader("⭐ Rating Distribution")
         st.bar_chart(df["Rating"].value_counts())
 
         st.subheader("Disease Count")
         st.bar_chart(df["Disease"].value_counts())
 
-        # 🥧 Pie Chart
-        st.subheader("📊 Rating Pie Chart")
-        fig, ax = plt.subplots()
-        df["Rating"].value_counts().plot.pie(autopct='%1.1f%%', ax=ax)
-        ax.set_ylabel("")
-        st.pyplot(fig)
-
-        # 📥 Download
-        st.download_button(
-            label="📥 Download Feedback Data",
-            data=df.to_csv(index=False),
-            file_name="patient_feedback.csv",
-            mime="text/csv"
-        )
-
-        # 🧾 Report
-        st.subheader("🧾 Generate Report")
-
-        if st.button("Generate Summary Report"):
-            total = len(df)
-            avg_rating = round(df["Rating"].mean(), 2)
-
-            st.write("### 📌 Report Summary")
-            st.write(f"Total Patients: {total}")
-            st.write(f"Average Rating: {avg_rating}")
-            st.write("Most Common Disease:")
-            st.write(df["Disease"].value_counts().idxmax())
-
     else:
-        st.warning("No feedback data available yet")
+        st.warning("No data available yet")
