@@ -31,11 +31,11 @@ st.markdown("""
     margin-top: 20px;
 }
 
-/* 🔥 STRONG LABEL FIX */
+/* Label Style */
 .label {
     font-size: 22px;
     font-weight: 800;
-    color: #000000;   /* FULL DARK */
+    color: #000000;
     margin-top: 15px;
 }
 
@@ -47,15 +47,14 @@ st.markdown("""
     box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
 }
 
-/* Login Heading */
+/* Login */
 .login-title {
     font-size: 38px;
     font-weight: 900;
-    color: #000000;
+    color: #000;
     text-align:center;
 }
 
-/* Subtitle */
 .login-sub {
     font-size: 18px;
     color: #374151;
@@ -70,14 +69,13 @@ st.markdown("""
     border-radius: 10px;
 }
 
-/* Inputs DARK */
+/* Dark Inputs */
 .stTextInput input, .stNumberInput input {
     background-color: #1f2937;
     color: white;
     border-radius: 10px;
 }
 
-/* Dropdown */
 .stSelectbox div {
     background-color: #1f2937 !important;
     color: white !important;
@@ -135,11 +133,11 @@ elif page == "Detection":
 
     st.markdown("<div class='section-title'>🧪 Skin Detection</div>", unsafe_allow_html=True)
 
-    st.markdown("<div class='label'>📍 Location</div>", unsafe_allow_html=True)
+    st.markdown("<div class='label'>📍 Location (lat, lon)</div>", unsafe_allow_html=True)
     location = st.text_input("", "17.3850, 78.4867")
 
     st.markdown("<div class='label'>📷 Upload Image</div>", unsafe_allow_html=True)
-    file = st.file_uploader("")
+    file = st.file_uploader("", type=["jpg","png","jpeg"])
 
     if file:
         img = Image.open(file)
@@ -161,6 +159,7 @@ elif page == "Detection":
             hospital = "AIIMS"
             precaution = "Consult doctor immediately"
 
+        # Result Cards
         st.markdown(f"""
         <div style="background:#d1fae5;padding:18px;border-radius:12px;
         margin-top:15px;font-size:20px;font-weight:800;color:#065f46;">
@@ -182,6 +181,20 @@ elif page == "Detection":
         </div>
         """, unsafe_allow_html=True)
 
+        # -------- MAP FIX --------
+        try:
+            lat, lon = location.split(",")
+            lat = float(lat.strip())
+            lon = float(lon.strip())
+
+            df = pd.DataFrame({"lat":[lat], "lon":[lon]})
+
+            st.markdown("<div class='section-title'>📍 Location Map</div>", unsafe_allow_html=True)
+            st.map(df)
+
+        except:
+            st.error("❌ Enter location like: 17.3850, 78.4867")
+
 # ---------------- FEEDBACK ----------------
 elif page == "Feedback":
 
@@ -191,16 +204,16 @@ elif page == "Feedback":
     name = st.text_input("")
 
     st.markdown("<div class='label'>🎂 Age</div>", unsafe_allow_html=True)
-    age = st.number_input("", min_value=1, max_value=100)
+    age = st.number_input("", 1, 100)
 
     st.markdown("<div class='label'>⚧ Gender</div>", unsafe_allow_html=True)
-    gender = st.selectbox("", ["Male", "Female", "Other"])
+    gender = st.selectbox("", ["Male","Female","Other"])
 
     st.markdown("<div class='label'>📍 Location</div>", unsafe_allow_html=True)
-    location = st.text_input(" ")
+    loc = st.text_input(" ")
 
     st.markdown("<div class='label'>🧠 Disease</div>", unsafe_allow_html=True)
-    disease = st.selectbox(" ", ["Acne", "Eczema", "Psoriasis", "Melanoma"])
+    disease = st.selectbox(" ", ["Acne","Eczema","Psoriasis","Melanoma"])
 
     st.markdown("<div class='label'>⭐ Rating</div>", unsafe_allow_html=True)
     rating = st.slider("", 1, 5)
@@ -209,7 +222,7 @@ elif page == "Feedback":
     fb = st.text_area("")
 
     if st.button("Submit Feedback"):
-        df = pd.DataFrame([[name, age, gender, location, disease, rating, fb]],
+        df = pd.DataFrame([[name, age, gender, loc, disease, rating, fb]],
                           columns=["Name","Age","Gender","Location","Disease","Rating","Feedback"])
         df.to_csv("feedback.csv", mode="a", header=False, index=False)
         st.success("✅ Feedback Saved Successfully!")
