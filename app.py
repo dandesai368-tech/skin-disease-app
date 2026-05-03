@@ -69,7 +69,7 @@ st.markdown("""
     border-radius: 10px;
 }
 
-/* Dark Inputs */
+/* Inputs */
 .stTextInput input, .stNumberInput input {
     background-color: #1f2937;
     color: white;
@@ -159,38 +159,32 @@ elif page == "Detection":
             hospital = "AIIMS"
             precaution = "Consult doctor immediately"
 
-        # Result Cards
         st.markdown(f"""
-        <div style="background:#d1fae5;padding:18px;border-radius:12px;
-        margin-top:15px;font-size:20px;font-weight:800;color:#065f46;">
+        <div style="background:#d1fae5;padding:18px;border-radius:12px;margin-top:15px;font-size:20px;font-weight:800;color:#065f46;">
         🧠 Disease: {pred}
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
-        <div style="background:#dbeafe;padding:18px;border-radius:12px;
-        margin-top:10px;font-size:20px;font-weight:800;color:#1e3a8a;">
+        <div style="background:#dbeafe;padding:18px;border-radius:12px;margin-top:10px;font-size:20px;font-weight:800;color:#1e3a8a;">
         🏥 Hospital: {hospital}
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
-        <div style="background:#fef3c7;padding:18px;border-radius:12px;
-        margin-top:10px;font-size:20px;font-weight:800;color:#92400e;">
+        <div style="background:#fef3c7;padding:18px;border-radius:12px;margin-top:10px;font-size:20px;font-weight:800;color:#92400e;">
         ⚠️ Precaution: {precaution}
         </div>
         """, unsafe_allow_html=True)
 
-        # -------- MAP FIX --------
         try:
             lat, lon = location.split(",")
             lat = float(lat.strip())
             lon = float(lon.strip())
 
-            df = pd.DataFrame({"lat":[lat], "lon":[lon]})
-
+            df_map = pd.DataFrame({"lat":[lat], "lon":[lon]})
             st.markdown("<div class='section-title'>📍 Location Map</div>", unsafe_allow_html=True)
-            st.map(df)
+            st.map(df_map)
 
         except:
             st.error("❌ Enter location like: 17.3850, 78.4867")
@@ -200,26 +194,13 @@ elif page == "Feedback":
 
     st.markdown("<div class='section-title'>💬 Patient Feedback</div>", unsafe_allow_html=True)
 
-    st.markdown("<div class='label'>👤 Name</div>", unsafe_allow_html=True)
-    name = st.text_input("")
-
-    st.markdown("<div class='label'>🎂 Age</div>", unsafe_allow_html=True)
-    age = st.number_input("", 1, 100)
-
-    st.markdown("<div class='label'>⚧ Gender</div>", unsafe_allow_html=True)
-    gender = st.selectbox("", ["Male","Female","Other"])
-
-    st.markdown("<div class='label'>📍 Location</div>", unsafe_allow_html=True)
-    loc = st.text_input(" ")
-
-    st.markdown("<div class='label'>🧠 Disease</div>", unsafe_allow_html=True)
-    disease = st.selectbox(" ", ["Acne","Eczema","Psoriasis","Melanoma"])
-
-    st.markdown("<div class='label'>⭐ Rating</div>", unsafe_allow_html=True)
-    rating = st.slider("", 1, 5)
-
-    st.markdown("<div class='label'>💬 Feedback</div>", unsafe_allow_html=True)
-    fb = st.text_area("")
+    name = st.text_input("👤 Name")
+    age = st.number_input("🎂 Age", 1, 100)
+    gender = st.selectbox("⚧ Gender", ["Male","Female","Other"])
+    loc = st.text_input("📍 Location")
+    disease = st.selectbox("🧠 Disease", ["Acne","Eczema","Psoriasis","Melanoma"])
+    rating = st.slider("⭐ Rating", 1, 5)
+    fb = st.text_area("💬 Feedback")
 
     if st.button("Submit Feedback"):
         df = pd.DataFrame([[name, age, gender, loc, disease, rating, fb]],
@@ -227,22 +208,46 @@ elif page == "Feedback":
         df.to_csv("feedback.csv", mode="a", header=False, index=False)
         st.success("✅ Feedback Saved Successfully!")
 
-# ---------------- ANALYTICS ----------------
+# ---------------- ANALYTICS (DASHBOARD) ----------------
 elif page == "Analytics":
 
-    st.markdown("<div class='section-title'>📊 Analytics</div>", unsafe_allow_html=True)
-
-    data = {
-        "Acne": random.randint(10,50),
-        "Eczema": random.randint(10,50),
-        "Psoriasis": random.randint(10,50),
-        "Melanoma": random.randint(5,30)
-    }
-
-    st.bar_chart(data) 
+    st.markdown("<div class='section-title'>📊 Dashboard</div>", unsafe_allow_html=True)
 
     try:
-        df = pd.read_csv("feedback.csv")
-        st.bar_chart(df["Rating"].value_counts())
+        df = pd.read_csv("feedback.csv", names=["Name","Age","Gender","Location","Disease","Rating","Feedback"])
     except:
+        df = pd.DataFrame(columns=["Name","Age","Gender","Location","Disease","Rating","Feedback"])
+
+    total = len(df)
+
+    if total > 0:
+        common = df["Disease"].value_counts().idxmax()
+        avg = round(df["Rating"].mean(), 2)
+    else:
+        common = "N/A"
+        avg = 0
+
+    c1, c2, c3 = st.columns(3)
+    c1.metric("👥 Total Patients", total)
+    c2.metric("🧠 Common Disease", common)
+    c3.metric("⭐ Avg Rating", avg)
+
+    st.markdown("---")
+
+    st.markdown("### 📊 Disease Distribution")
+    if total > 0:
+        st.bar_chart(df["Disease"].value_counts())
+    else:
+        st.info("No data available")
+
+    st.markdown("### ⭐ Ratings Overview")
+    if total > 0:
+        st.bar_chart(df["Rating"].value_counts())
+    else:
+        st.info("No ratings yet")
+
+    st.markdown("### 📝 Recent Feedback")
+    if total > 0:
+        st.dataframe(df.tail(5))
+    else:
         st.info("No feedback yet")
