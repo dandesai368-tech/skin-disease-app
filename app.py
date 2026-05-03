@@ -239,7 +239,7 @@ elif page == "Analytics":
         "Melanoma": random.randint(5,30)
     }
 
-    st.bar_chart(data)
+    st.bar_chart(data) 
 
     try:
         df = pd.read_csv("feedback.csv")
